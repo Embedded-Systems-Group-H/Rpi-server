@@ -1,6 +1,17 @@
-.App {
-  text-align: center;
-}
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+ }
+
+ .App {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+ }
 
 .App-logo {
   height: 40vmin;
@@ -35,4 +46,11 @@
   to {
     transform: rotate(360deg);
   }
+}
+ 
+ /*Styling specific to our maps*/
+ .map-container {
+  position: absolute;
+  height:500px;
+  width:70%;
 }
