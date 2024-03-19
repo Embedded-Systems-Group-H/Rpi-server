@@ -15,6 +15,7 @@ def csv_handle(filename):
     return rows
 
 def get_datetime(UnixDateTime):
+    UnixDateTime = int(UnixDateTime)
     current_date_time = datetime.fromtimestamp(UnixDateTime)
     # print("date_time", current_date_time)
     return current_date_time
@@ -24,19 +25,23 @@ def get_distance(data): # this function return the total distance of a workout
     data_length = len(data)
     print (data_length)
     for i in range (data_length-1):
-        # print(i)
+
         lat1 = data.latitude[i]
         lon1 = data.longitude[i]
         lat2 = data.latitude[i+1]
         lon2 = data.longitude[i+1]
-        dist = mpu.haversine_distance((lat1,lon1), (lat2, lon2))
-        distance = distance + dist
+        if (lat1>0 and lat2>0 and lon1 > 0 and lon2 > 0): # check for all valid value. This may not work if you are running in somewhere south of the equator, or East of Greenwich england
+            dist = mpu.haversine_distance((lat1,lon1), (lat2, lon2))
+            distance = distance + dist
     return round(distance,2)
 
 def get_step(data):
+    max_step_count = 0
     data_length = len(data)
-    # print(data.stepcount)
-    return data.stepcount[data_length-1]
+    for stepcount in data.stepcount:
+        if max_step_count < stepcount:
+            max_step_count = stepcount
+    return int(max_step_count)
 
 def get_calories(duration):
     body_weight = 75
@@ -47,13 +52,16 @@ def get_calories(duration):
 def get_coordinates(data):
     coordinates = []
     for i in range(len(data)):
-        coordinates.append([data.longitude[i], data.latitude[i]])
+        if data.longitude[i]> 0 and data.latitude[i] > 0:
+            coordinates.append([data.longitude[i], data.latitude[i]])
     return coordinates
 
 def construct_csv_string(data):
     csv_string= "\n"
     # data = pd.read_csv(filename)
+    # print (data.timestamp[0])
     current_datetime = get_datetime(data.timestamp[0])
+    print(current_datetime)
     csv_string = csv_string + str(current_datetime)+","  # add the date time to the csv
     data_length = len(data.timestamp) # number of row in the csv file
     duration = data.timestamp[data_length-1]- data.timestamp[0] # last row timestamp - first row timestamp
@@ -69,8 +77,18 @@ def construct_csv_string(data):
     csv_string += ',' + str(coordinates)
     return csv_string
 
+def write_to_summary(filename):
+    csv_filename = filename
+    write_filename = "summary.csv"
+    data = pd.read_csv(csv_filename)
+    print('data', data)
+    string_to_append = construct_csv_string(data)
+    f = open(write_filename, "a")
+    f.write(string_to_append)
+    f.close()
+
 if __name__ == "__main__":
-    csv_filename = "testfile2.csv"
+    csv_filename = "1710846142.csv"
     write_filename = "summary.csv"
     data = pd.read_csv(csv_filename)
     print('data', data)
