@@ -20,7 +20,9 @@ def get_sessions():
         else:
             print(f"Failed to send data: {response.status_code}")
     except requests.exceptions.RequestException as e:
+        
         print(f"Error: {e}")
+        return 0
 
 def get_session_csv(session_id):
     try:
@@ -38,30 +40,38 @@ if __name__ == "__main__":
         f = open("dataList.txt", "r")
         my_list = f.read().split(",")
         f.close()
+        print("Current data in database: ")
         for i in my_list:
             print(i)
+            time.sleep(0.1)
         # print(my_list)
+        time.sleep(1)
+        print("attempting to connect to server to fetch new data")
         sessions = get_sessions()
-        print("Found sessions:")
-        print(sessions)
-        for session in sessions:
-            if session in my_list:
-                print ("file " + str(session) + " exist in the list") 
-            else: 
-                print("cannot find " + str(session) + " in the list")
-                print(" prepare to download the file")
-                csv = get_session_csv(session)
-                # print(csv) 
-                #save session to a csv file 
-                with open(session, 'w') as file:
-                    file.write("timestamp,longitude,latitude,stepcount\n")
-                    file.write(csv)
-                print("finish writing new file to the server") 
-                f = open("dataList.txt", "a")
-                f.write(session + ",")
-                f.close()
-                data_handle.write_to_summary(session)
-                # f.write(session)
-                # print("added new file name to dataList") 
+        
+        if sessions != 0: 
+            print("Found sessions:")
+            print(sessions)
+            for session in sessions:
+                if session in my_list:
+                    print ("file " + str(session) + " exist in the list") 
+                else: 
+                    print("cannot find " + str(session) + " in the list")
+                    print(" prepare to download the file")
+                    time.sleep(3) # sleep 3s to make sure the server get all the same file in the csv in the list 
+                    csv = get_session_csv(session)
+                    # print(csv) 
+                    #save session to a csv file 
+                    with open(session, 'w') as file:
+                        file.write("timestamp,longitude,latitude,stepcount\n")
+                        file.write(csv)
+                    print("finish writing new file to the server") 
+                    f = open("dataList.txt", "a")
+                    f.write(session + ",")
+                    f.close()
+                    data_handle.write_to_summary(session)
+        else: 
+            print("Failed to connect to server, please try again later")
+        time.sleep(1)
         print("loop done")
         time.sleep(10)
