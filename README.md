@@ -2,9 +2,6 @@
 
 Welcome to the official GitHub repository for the `ELEC-E8408 Embedded System Development` course. This repository contains the source code and resources for the Raspberry Pi server project, an integral part of our course curriculum.
 
-## Course Overview
-
-This course focuses on developing practical skills in embedded system design and implementation, using the Raspberry Pi as a primary platform. Students will gain hands-on experience in both hardware interfacing and software development, culminating in the creation of a fully functional embedded system server.
 
 ## Getting Started
 
