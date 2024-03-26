@@ -1,4 +1,5 @@
-This is the github repo for Raspberry Pi server 
+# ELEC-E8408 Embedded System Development 
+## This is the github repo for Raspberry Pi server 
 
 Please checkout branch frontend-backend for latest development code 
 
